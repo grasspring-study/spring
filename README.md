@@ -22,5 +22,5 @@
 #### minseo
 
 - minseo/hello-spring/
-- minseo/mvc-1/
-- minseo/mvc-2/
+- minseo/mvc1/
+- minseo/mvc2/
