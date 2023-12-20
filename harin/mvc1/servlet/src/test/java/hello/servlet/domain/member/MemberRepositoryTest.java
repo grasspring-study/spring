@@ -43,7 +43,6 @@ class MemberRepositoryTest {
         //when
         List<Member> result = memberRepository.findAll();
 
-
         //then
         assertThat(result.size()).isEqualTo(2);
         assertThat(result).contains(member1, member2);
