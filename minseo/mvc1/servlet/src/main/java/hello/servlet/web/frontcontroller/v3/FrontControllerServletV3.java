@@ -41,11 +41,12 @@ public class FrontControllerServletV3 extends HttpServlet {
 
         // paramMap
 
-        Map<String, String> paramMap = createParamMap(request);
+        Map<String, String> paramMap = createParamMap(request); // 파라미터를 모두 뽑는다.
         ModelView mv = controller.process(paramMap);
 
-        String viewName = mv.getViewName();// 논리이름 new-form
-        MyView view = viewResolver(viewName);
+        // 뷰 리졸버는 컨트롤러가 반환한 논리이름을 물리이름으로 변경하고, 실제 물리 경로가 있는 MyView 객체를 반환한다.
+        String viewName = mv.getViewName(); // 논리이름 반환 ex) new-form
+        MyView view = viewResolver(viewName); // 물리이름 반환 ex) /WEB-INF/views/new-form.jsp
         
         view.render(mv.getModel(), request, response);
 
@@ -53,7 +54,7 @@ public class FrontControllerServletV3 extends HttpServlet {
 
     private static MyView viewResolver(String viewName) {
         return new MyView("/WEB-INF/views/" + viewName + ".jsp");
-    }
+    } // 물리 경로가 변경되더라도 컨트롤러를 건드릴 필요없이, 이 부분의 코드만 고치면 된다.
 
     private static Map<String, String> createParamMap(HttpServletRequest request) {
         Map<String, String> paramMap = new HashMap<>();

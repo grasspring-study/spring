@@ -20,9 +20,9 @@ public class MyView {
     }
 
     public void render(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        modelToRequestAttribute(model, request);
+        modelToRequestAttribute(model, request); // 모델에 담긴 정보를 모두 꺼내서 http servlet request setAttribute에 넣어준다.
         RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
-        dispatcher.forward(request, response);
+        dispatcher.forward(request, response); // dispatcher를 통해 jsp로 이동한다.
     }
 
     private static void modelToRequestAttribute(Map<String, Object> model, HttpServletRequest request) {
