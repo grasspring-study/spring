@@ -2,11 +2,14 @@ package hello.servlet.web.frontcontroller.v5;
 
 import hello.servlet.web.frontcontroller.ModelView;
 import hello.servlet.web.frontcontroller.MyView;
-import hello.servlet.web.frontcontroller.v3.ControllerV3;
 import hello.servlet.web.frontcontroller.v3.controller.MemberFormControllerV3;
 import hello.servlet.web.frontcontroller.v3.controller.MemberListControllerV3;
 import hello.servlet.web.frontcontroller.v3.controller.MemberSaveControllerV3;
+import hello.servlet.web.frontcontroller.v4.controller.MemberFormControllerV4;
+import hello.servlet.web.frontcontroller.v4.controller.MemberListControllerV4;
+import hello.servlet.web.frontcontroller.v4.controller.MemberSaveControllerV4;
 import hello.servlet.web.frontcontroller.v5.adapter.ControllerV3HandlerAdapter;
+import hello.servlet.web.frontcontroller.v5.adapter.ControllerV4HandlerAdapter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -32,14 +35,21 @@ public class ForntControllerServletV5 extends HttpServlet {
         initHandlerAdapters();
     }
 
+    // 이부분만 외부에서 주입하도록 바꾸면 ocp 지킬 수 있음 (set으로)
     private void initHandlerMappingMap() {
         handlerMappingMap.put("/front-controller/v5/v3/members/new-form", new MemberFormControllerV3());
         handlerMappingMap.put("/front-controller/v5/v3/members/save", new MemberSaveControllerV3());
         handlerMappingMap.put("/front-controller/v5/v3/members", new MemberListControllerV3());
+
+        //v4 추가 -> v4 처리 어댑터 넣어줘야해
+        handlerMappingMap.put("/front-controller/v5/v4/members/new-form", new MemberFormControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members/save", new MemberSaveControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members", new MemberListControllerV4());
     }
 
     private void initHandlerAdapters() {
         handlerAdapters.add(new ControllerV3HandlerAdapter());
+        handlerAdapters.add(new ControllerV4HandlerAdapter());
     }
 
     @Override
