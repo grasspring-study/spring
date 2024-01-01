@@ -83,6 +83,19 @@ public class BasicItemController {
         return "basic/item";
     }
 
+    @GetMapping("/{itemId}/edit")
+    public String editForm(@PathVariable(name="itemId") Long itemId, Model model) {
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+        return "basic/editForm";
+    }
+
+    @PostMapping("/{itemId}/edit")
+    public String edit(@PathVariable(name="itemId") Long itemId, @ModelAttribute Item item) {
+        itemRepository.update(itemId, item);
+        return "redirect:/basic/items/{itemId}"; // 뷰 템플릿을 호출하는 대신 상품 상세 화면으로 이동한다.
+    }
+
     // 테스트용 데이터 추가
     @PostConstruct // 해당 빈의 의존관계가 모두 주입되고 나면 초기화 용도로 호출된다.
     public void init() {
