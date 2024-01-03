@@ -2,6 +2,7 @@ package hello.itemservice.web.form;
 
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
+import hello.itemservice.domain.item.ItemType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,11 @@ public class FormItemController {
         return regions;
     }
 
+    @ModelAttribute("itemTypes")
+    public ItemType[] itemTypes() {
+        return ItemType.values(); // enum의 모든 정보를 배열로 반환한다.
+    }
+
     @GetMapping
     public String items(Model model) {
         List<Item> items = itemRepository.findAll();
@@ -63,6 +69,7 @@ public class FormItemController {
         // -> HTML에 히든 필드를 만들어서 해당 문제를 해결한다. 기존 체크 박스 이름 앞에 _를 붙여서 전송하면 체크를 해제했다고 인식할 수 있다.
 
         log.info("item.regions={}", item.getRegions());
+        log.info("item.itemType={}", item.getItemType());
 
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
