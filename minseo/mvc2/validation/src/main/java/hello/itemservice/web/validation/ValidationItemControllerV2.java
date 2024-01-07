@@ -10,6 +10,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -25,6 +27,16 @@ public class ValidationItemControllerV2 {
 
     private final ItemRepository itemRepository;
     private final ItemValidator itemValidator;
+
+    /**
+     * WebDataBinder에 검증기를 추가하면 해당 컨트롤러에서는 검증기를 자동으로 적용할 수 있다.
+     * @InitBinder -> 컨트롤러에만 영향을 준다.
+     */
+    @InitBinder
+    public void init(WebDataBinder dataBinder) {
+        log.info("init binder {}", dataBinder);
+        dataBinder.addValidators(itemValidator);
+    }
 
     @GetMapping
     public String items(Model model) {
@@ -193,10 +205,33 @@ public class ValidationItemControllerV2 {
         return "redirect:/validation/v2/items/{itemId}";
     }
 
-    @PostMapping("/add")
+    /**
+     * validator 호출
+     */
+//    @PostMapping("/add")
     public String addItemV5(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         itemValidator.validate(item, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "validation/v2/addForm";
+        }
+
+        // 성공 로직
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/validation/v2/items/{itemId}";
+    }
+
+    /**
+     * validator를 직접 호출하는 대신, 검증 대상 앞에 @Validated를 붙인다.
+     * @Validated: 앞서 WebDataBinder에 등록한 검증기를 찾아서 실행한다. 어떤 검증기를 실행할지는 supports()를 통해 구분한다.
+     * 여기서는 supports(Item.class)가 호출되고, 결과가 true이므로 ItemValidator의 validate()가 호출된다.
+     */
+    @PostMapping("/add")
+    public String addItemV6(@Validated @ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
