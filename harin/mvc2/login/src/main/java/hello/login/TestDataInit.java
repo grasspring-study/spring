@@ -2,10 +2,10 @@ package hello.login;
 
 import hello.login.domain.item.Item;
 import hello.login.domain.item.ItemRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 
 @Component
 @RequiredArgsConstructor
