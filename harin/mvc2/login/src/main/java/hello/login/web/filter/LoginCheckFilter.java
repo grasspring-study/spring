@@ -28,7 +28,7 @@ public class LoginCheckFilter implements Filter {
                     log.info("미인증 사용자 요청 {}", requestURI);
                     //로그인으로 redirect
                     httpResponse.sendRedirect("/login?redirectURL=" + requestURI);
-                    return;
+                    return; //여기가 중요, 미인증 사용자는 다음으로 진행하지 않고 끝!
                 }
             }
             chain.doFilter(request, response);
